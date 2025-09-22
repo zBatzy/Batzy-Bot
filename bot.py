@@ -1,13 +1,10 @@
-
-
-
 import os
 import discord
 from discord import app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
 
-OWNER_ID = 332262693626970112  # replace with your ID
+OWNER_ID = 332262693626970112  # batzy ID
 
 # Load the token from .env
 load_dotenv()
@@ -45,13 +42,12 @@ async def setup_hook():
     except Exception as e:
         print("[SYNC ERROR]", repr(e))
 
-
 @bot.tree.command(description="Force sync commands (owner only)")
 async def sync(interaction: discord.Interaction):
     # ✅ Only you can run it
     if interaction.user.id != OWNER_ID:
         await interaction.response.send_message("❌ You are not allowed to use this.", ephemeral=True)
-        return
+        return # I dont think this works btw!! you are returning nothing you will get an error - Ayumi
 
     # ✅ Acknowledge immediately
     await interaction.response.defer(ephemeral=True)
@@ -78,13 +74,11 @@ async def sync(interaction: discord.Interaction):
         await interaction.followup.send(f"❌ Sync failed: `{e}`", ephemeral=True)
 
 # /hello — greet someone by name
-from discord import app_commands
 
 @app_commands.describe(name="Who should I greet?")
 @bot.tree.command(description="Say hello to someone")
 async def hello(interaction: discord.Interaction, name: str):
     await interaction.response.send_message(f"Hey {name}! 👋", ephemeral=False)
-
 
 # /serverinfo — basic server stats (no privileged intents needed)
 @bot.tree.command(description="Show basic info about this server")
@@ -101,7 +95,6 @@ async def serverinfo(interaction: discord.Interaction):
     )
     await interaction.response.send_message(msg, ephemeral=True)
 
-
 # /roll — simple dice roller: /roll sides:20
 @app_commands.describe(sides="Number of sides on the die (2–100000)")
 @bot.tree.command(description="Roll a die")
@@ -112,7 +105,6 @@ async def roll(interaction: discord.Interaction, sides: int = 6):
     import random
     result = random.randint(1, sides)
     await interaction.response.send_message(f"🎲 You rolled **{result}** (1–{sides})", ephemeral=False)
-
 
 # /purge — delete last N messages (admin-only)
 @app_commands.describe(count="How many recent messages to delete (1–100)")
